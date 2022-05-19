@@ -1,0 +1,339 @@
+
+MariaDB [(none)]> use jay;
+Database changed
+MariaDB [jay]> show tables from jay;
++----------------+
+| Tables_in_jay  |
++----------------+
+| admin          |
+| course         |
+| customer1      |
+| department     |
+| dept           |
+| deptview       |
+| emp            |
+| employee       |
+| employee1      |
+| job_info       |
+| student        |
+| student_course |
+| student_info   |
+| student_reg    |
+| teacher        |
++----------------+
+
+___ADMIN TABLE________________________________________________________________________________________________________________________________________________________________________________
+
+MariaDB [jay]>create table admin(a_id int primary key,a_name varchar(11) not null,loginname varchar(15) not null, password varchar(15) not null unique );
+
+MariaDB [jay]> desc admin;
+    
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| a_id      | int(11)     | NO   | PRI | NULL    |       |
+| a_name    | varchar(11) | NO   |     | NULL    |       |
+| loginname | varchar(15) | NO   |     | NULL    |       |
+| password  | varchar(15) | NO   | UNI | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+
+
+MariaDB [jay]> insert into admin values(01,'nihar','nik01@gmail.com','nik4848'),(02,'divya','div02@ymail.com','div3658'),(03,'neha','neha03@gmail.com','neh26335');
+
+MariaDB [jay]> select * from admin;
++------+--------+-----------------+----------+
+| a_id | a_name | loginname       | password |
++------+--------+-----------------+----------+
+|    1 | nihar  | nik01@gmail.com | nik4848  |
+|    2 | divya  | div02@ymail.com | div3658  |
+|    3 | neha   | neha03@gmail.co | neh26335 |
++------+--------+-----------------+----------+
+
+___COURSE TABLE_______________________________________________________________________________________________________________________________________________________________________________
+
+
+MariaDB [jay]>create table course(c_id int primary key,c_name varchar(10) not null,fees int not null,duration varchar(10));
+
+MariaDB [jay]> desc course;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| c_id     | int(11)     | NO   | PRI | NULL    |       |
+| c_name   | varchar(10) | NO   |     | NULL    |       |
+| fees     | int(11)     | NO   |     | NULL    |       |
+| duration | varchar(10) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+
+MariaDB [jay]>insert into course values(10,'python',60000,'3 months'),(11,'sql',20000,'2 months'),(12,'machine learning',50000,'6 months'),(13,'artificial intelligence',80000,'10 months');
+
+MariaDB [jay]> select * from course;
++------+---------+-------+-----------+
+| c_id | c_name  | fees  | duration  |
++------+---------+-------+-----------+
+|   10 | python  | 60000 | 3 months  |
+|   11 | sql     | 20000 | 5 months  |
+|   12 | tableau | 50000 | 6 months  |
+|   13 | AI      | 80000 | 10 months |
++------+---------+-------+-----------+
+
+
+__TEACHER TABLE_____________________________________________________________________________________________________________________________________________________________________________________
+
+
+MariaDB [jay]>create table teacher(t_id int primary key,c_id int,foreign key(c_id) references course(c_id),t_name varchar(15),subject varchar(10);
+
+MariaDB [jay]> desc teacher;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| t_id    | int(11)     | NO   | PRI | NULL    |       |
+| c_id    | int(11)     | YES  | MUL | NULL    |       |
+| t_name  | varchar(15) | NO   |     | NULL    |       |
+| subject | varchar(10) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+
+MariaDB [jay]>insert into teacher values(101,12,'nisha','tableau'),(102,10,'tanya','python'),(103,11,'meena','sql'),(104,13,'ajit','AI');
+
+MariaDB [jay]> select * from teacher;
++------+------+--------+---------+
+| t_id | c_id | t_name | subject |
++------+------+--------+---------+
+|  101 |   12 | nisha  | tableau |
+|  102 |   10 | tanya  | python  |
+|  103 |   11 | meena  | sql     |
+|  104 |   13 | ajit   | AI      |
++------+------+--------+---------+
+
+
+__STUDENT TABLE__________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+MariaDB [jay]> create table student(s_id int primary key,t_id int,c_id int,foreign key(t_id) references teacher(t_id),foreign key(c_id) references course(c_id),s_name varchar(15),subject varchar(10),
+                     address varchar(15),fees_detail int not null);    
+
+MariaDB [jay]> desc student;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| s_id        | int(11)     | NO   | PRI | NULL    |       |
+| t_id        | int(11)     | YES  | MUL | NULL    |       |
+| c_id        | int(11)     | YES  | MUL | NULL    |       |
+| s_name      | varchar(15) | NO   |     | NULL    |       |
+| subject     | varchar(10) | NO   |     | NULL    |       |
+| address     | varchar(15) | NO   |     | NULL    |       |
+| fees_detail | int(11)     | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+
+
+MariaDB [jay]> insert into student values(1001,104,13,'jay','AI','thane',80000),(1002,102,10,'harish','python','mulund',60000),(1003,101,12,'disha','tableau','borivali',50000),
+                                           (1004,103,11,'shreya','sql','dadar',20000);
+
+MariaDB [jay]> select * from student;
++------+------+------+--------+---------+----------+-------------+
+| s_id | t_id | c_id | s_name | subject  | address  | fees_detail |
++------+------+------+--------+---------+----------+-------------+
+| 1001 |  104 |   13 | jay    | AI      | thane    |       80000 |
+| 1002 |  102 |   10 | harish | python  | mulund   |       60000 |
+| 1003 |  101 |   12 | disha  | tableau | borivali |       50000 |
+| 1004 |  103 |   11 | shreya | sql     | dadar    |       20000 |
++------+------+------+--------+---------+----------+-------------+
+
+
+__QUERIES:-_____________________________________________________________________________________________________________________________________________________________________________________________________________
+
+1:- update admin set a_name='nikhil' where a_id= 1;
+
+MariaDB [jay]> update admin set a_name='nikhil' where a_id= 1;
+Query OK, 1 row affected (0.030 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [jay]> select * from admin;
++------+--------+-----------------+----------+
+| a_id | a_name | loginname       | password |
++------+--------+-----------------+----------+
+|    1 | nikhil | nik01@gmail.com | nik4848  |
+|    2 | divya  | div02@ymail.com | div3658  |
+|    3 | neha   | neha03@gmail.co | neh26335 |
++------+--------+-----------------+----------+
+
+----------------------------------------------------------------------------------------------------------
+
+
+2:- alter table student change course subject varchar(10);
+
+MariaDB [jay]> alter table student change subject course varchar(10)
+    -> ;
+Query OK, 0 rows affected (0.082 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [jay]> select * from student;
++------+------+------+--------+---------+----------+-------------+
+| s_id | t_id | c_id | s_name | course  | address  | fees_detail |
++------+------+------+--------+---------+----------+-------------+
+| 1001 |  104 |   13 | jay    | AI      | thane    |       80000 |
+| 1002 |  102 |   10 | harish | python  | mulund   |       60000 |
+| 1003 |  101 |   12 | disha  | tableau | borivali |       50000 |
+| 1004 |  103 |   11 | shreya | sql     | dadar    |       20000 |
++------+------+------+--------+---------+----------+-------------+
+
+-----------------------------------------------------------------------------------------------------------
+
+3:- select s_id,c_id,s_name,subject from student;
+
+MariaDB [jay]> select s_id,c_id,s_name,course from student;
++------+------+--------+---------+
+| s_id | c_id | s_name | course  |
++------+------+--------+---------+
+| 1001 |   13 | jay    | AI      |
+| 1002 |   10 | harish | python  |
+| 1003 |   12 | disha  | tableau |
+| 1004 |   11 | shreya | sql     |
++------+------+--------+---------+
+
+--------------------------------------------------------------------------------------------------------
+
+4:- select select s_name,course,fees_detail from student where fees_detail<60000;
+
++--------+---------+-------------+
+| s_name | course  | fees_detail |
++--------+---------+-------------+
+| disha  | tableau |       50000 |
+| shreya | sql     |       20000 |
++--------+---------+-------------+
+
+MariaDB [jay]> select s_name,course,fees_detail from student where fees_detail>50000;
++--------+--------+-------------+
+| s_name | course | fees_detail |
++--------+--------+-------------+
+| jay    | AI     |       80000 |
+| harish | python |       60000 |
++--------+--------+-------------+
+
+----------------------------------------------------------------------------------------------------------
+
+5:- select t_name,subject from teacher where c_id between 10 and 12;
+
+MariaDB [jay]> select t_name,subject from teacher where c_id between 10 and 12;
++--------+---------+
+| t_name | subject |
++--------+---------+
+| nisha  | tableau |
+| tanya  | python  |
+| meena  | sql     |
++--------+---------+
+
+---------------------------------------------------------------------------------------------------------------
+
+6:- update teacher set t_name='neena' where t_id=103;
+
+MariaDB [jay]> update teacher set t_name='neena' where t_id=103;
+Query OK, 1 row affected (0.056 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [jay]> select * from teacher;
++------+------+--------+---------+
+| t_id | c_id | t_name | subject |
++------+------+--------+---------+
+|  101 |   12 | nisha  | tableau |
+|  102 |   10 | tanya  | python  |
+|  103 |   11 | neena  | sql     |
+|  104 |   13 | ajit   | AI      |
++------+------+--------+---------+
+
+-----------------------------------------------------------------------------------------------------------------
+
+7:- update course set duration='4 months' where c_id=11;
+
+MariaDB [jay]> update course set duration='4 months' where c_id=11;
+Query OK, 1 row affected (0.049 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [jay]> select * from course;
++------+---------+-------+-----------+
+| c_id | c_name  | fees  | duration  |
++------+---------+-------+-----------+
+|   10 | python  | 60000 | 3 months  |
+|   11 | sql     | 20000 | 4 months  |
+|   12 | tableau | 50000 | 6 months  |
+|   13 | AI      | 80000 | 10 months |
++------+---------+-------+-----------+
+
+------------------------------------------------------------------------------------------------------------------------
+
+8:- MariaDB [jay]> select c_id,fees from course where fees>(select fees from course where c_id=10);
+
++------+-------+
+| c_id | fees  |
++------+-------+
+|   13 | 80000 |
++------+-------+
+1 row in set (0.001 sec)
+
+MariaDB [jay]> select c_id,fees from course where fees<(select fees from course where c_id=10);
++------+-------+
+| c_id | fees  |
++------+-------+
+|   11 | 20000 |
+|   12 | 50000 |
++------+-------+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+9:- min/max.
+
+MariaDB [jay]> select min(fees_detail) from student;
++------------------+
+| min(fees_detail) |
++------------------+
+|            20000 |
++------------------+
+MariaDB [jay]> select max(fees_detail) from student;
++------------------+
+| max(fees_detail) |
++------------------+
+|            80000 |
++------------------+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+10:- Right outer join.
+
+MariaDB [jay]> select teacher.t_name,student.s_name from teacher right outer join student on teacher.t_id=student.t_id ;
++--------+--------+
+| t_name | s_name |
++--------+--------+
+| ajit   | jay    |
+| tanya  | harish |
+| nisha  | disha  |
+| neena  | shreya |
++--------+--------+
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+11:- Left outer join.
+
+MariaDB [jay]>  select teacher.t_name,student.s_name,student.fees_detail from teacher left outer join student on teacher.t_id=student.t_id ;
++--------+--------+-------------+
+| t_name | s_name | fees_detail |
++--------+--------+-------------+
+| ajit   | jay    |       80000 |
+| tanya  | harish |       60000 |
+| nisha  | disha  |       50000 |
+| neena  | shreya |       20000 |
++--------+--------+-------------+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+12:- Subquery.
+
+MariaDB [jay]> select t_id,(select s_name from student where student.t_id=teacher.t_id) from teacher;
++------+--------------------------------------------------------------+
+| t_id | (select s_name from student where student.t_id=teacher.t_id) |
++------+--------------------------------------------------------------+
+|  102 | harish                                                       |
+|  103 | shreya                                                       |
+|  101 | disha                                                        |
+|  104 | jay                                                          |
++------+--------------------------------------------------------------+
+
+
